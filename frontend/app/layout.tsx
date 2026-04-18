@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Web3Provider } from '@/components/providers/Web3Provider';
 import { FlowPayProvider } from '@/lib/flowpayContext';
+import { CreditLineProvider } from '@/lib/creditLineContext';
 import { AuthProvider } from '@/lib/AuthContext';
 
 const inter = Inter({
@@ -11,14 +12,21 @@ const inter = Inter({
   display: 'swap',
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
+
 export const metadata: Metadata = {
-  title: 'FlowPay — Unified Crypto Spending in INR',
+  title: 'FlowPay — Crypto-Backed Credit Line',
   description:
-    'Turn your fragmented crypto assets into one spendable INR balance. Deposit USDC, MATIC, ETH and spend instantly via QR payments. Powered by Polygon.',
-  keywords: ['crypto', 'payments', 'INR', 'DeFi', 'Polygon', 'Web3', 'FlowPay'],
+    'Deposit ETH or USDC as collateral and borrow instantly. No credit score. Non-custodial DeFi credit powered by Chainlink price feeds.',
+  keywords: ['crypto', 'DeFi', 'credit line', 'lending', 'ETH', 'USDC', 'Chainlink', 'FlowPay'],
   openGraph: {
-    title: 'FlowPay — Unified Crypto Spending in INR',
-    description: 'Wallets show what you own. We show what you can spend.',
+    title: 'FlowPay — Crypto-Backed Credit Line',
+    description: 'Your crypto. Your collateral. Your credit.',
     type: 'website',
   },
 };
@@ -29,13 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="bg-[#0A0A0F] text-slate-100 antialiased" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning style={{ background: '#0D1412', color: '#E8F5F2' }}>
         <Web3Provider>
           <FlowPayProvider>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
+            <CreditLineProvider>
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </CreditLineProvider>
           </FlowPayProvider>
         </Web3Provider>
       </body>
