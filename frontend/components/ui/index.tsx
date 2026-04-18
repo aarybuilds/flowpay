@@ -29,11 +29,11 @@ export function Button({
     lg: 'px-7 py-3.5 text-base',
   };
   const variants = {
-    brand:   'bg-gradient-to-r from-primary-600 to-accent-500 text-white hover:shadow-glow-md hover:-translate-y-0.5 active:translate-y-0',
-    outline: 'border border-primary-600/50 text-primary-400 hover:bg-primary-600/10 hover:border-primary-500',
+    brand:   'font-bold text-[#0D1412] bg-gradient-to-r from-[#00D4AA] to-[#00FF87] hover:shadow-glow-md hover:-translate-y-0.5 active:translate-y-0',
+    outline: 'border border-[#00D4AA]/40 text-[#00D4AA] hover:bg-[#00D4AA]/10 hover:border-[#00D4AA]/70',
     ghost:   'text-slate-400 hover:text-white hover:bg-white/5',
-    danger:  'bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20',
-    success: 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20',
+    danger:  'bg-[#FF5E5E]/10 border border-[#FF5E5E]/30 text-[#FF5E5E] hover:bg-[#FF5E5E]/20',
+    success: 'bg-[#00FF87]/10 border border-[#00FF87]/30 text-[#00FF87] hover:bg-[#00FF87]/20',
   };
 
   return (
@@ -68,8 +68,9 @@ export function Card({ children, className, hover = false, glow = false, onClick
     <Tag
       onClick={onClick}
       className={cn(
-        'glass rounded-2xl p-5',
-        hover && 'hover:bg-white/[0.07] hover:border-white/[0.14] cursor-pointer transition-all duration-200 hover:shadow-card-hover',
+        'rounded-2xl p-5',
+        'bg-[rgba(14,22,19,0.85)] border border-[rgba(0,212,170,0.1)]',
+        hover && 'hover:bg-[rgba(14,22,19,0.95)] hover:border-[rgba(0,212,170,0.22)] cursor-pointer transition-all duration-200 hover:shadow-card-hover',
         glow && 'animate-pulse-glow',
         onClick && 'cursor-pointer',
         className,
@@ -90,11 +91,11 @@ interface BadgeProps {
 
 export function Badge({ children, variant = 'purple', size = 'sm', className }: BadgeProps) {
   const variants = {
-    purple: 'bg-primary-600/20 text-primary-300 border border-primary-500/30',
-    blue:   'bg-accent-500/20 text-accent-400 border border-accent-500/30',
-    green:  'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
-    yellow: 'bg-amber-500/20 text-amber-400 border border-amber-500/30',
-    red:    'bg-red-500/20 text-red-400 border border-red-500/30',
+    purple: 'bg-[#00D4AA]/15 text-[#00D4AA] border border-[#00D4AA]/30',
+    blue:   'bg-[#627EEA]/15 text-[#8BA3FF] border border-[#627EEA]/30',
+    green:  'bg-[#00FF87]/15 text-[#00FF87] border border-[#00FF87]/30',
+    yellow: 'bg-[#FFA858]/15 text-[#FFA858] border border-[#FFA858]/30',
+    red:    'bg-[#FF5E5E]/15 text-[#FF5E5E] border border-[#FF5E5E]/30',
     gray:   'bg-white/5 text-slate-400 border border-white/10',
   };
   const sizes = { sm: 'px-2 py-0.5 text-xs', md: 'px-3 py-1 text-sm' };
@@ -115,10 +116,10 @@ interface ProgressProps {
   animated?: boolean;
 }
 
-export function Progress({ value, max = 100, color = 'from-primary-600 to-accent-500', className, animated = true }: ProgressProps) {
+export function Progress({ value, max = 100, color = 'from-[#00D4AA] to-[#00FF87]', className, animated = true }: ProgressProps) {
   const pct = Math.min((value / max) * 100, 100);
   return (
-    <div className={cn('h-2 bg-white/5 rounded-full overflow-hidden', className)}>
+    <div className={cn('h-2 rounded-full overflow-hidden', className)} style={{ background: 'rgba(0,212,170,0.08)' }}>
       <motion.div
         className={cn('h-full rounded-full bg-gradient-to-r', color)}
         initial={animated ? { width: 0 } : false}
