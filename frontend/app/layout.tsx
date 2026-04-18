@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Web3Provider } from '@/components/providers/Web3Provider';
 import { FlowPayProvider } from '@/lib/flowpayContext';
 
 const inter = Inter({
@@ -27,11 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="bg-[#0A0A0F] text-slate-100 antialiased">
-        <FlowPayProvider>
-          {children}
-        </FlowPayProvider>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="bg-[#0A0A0F] text-slate-100 antialiased" suppressHydrationWarning>
+        <Web3Provider>
+          <FlowPayProvider>
+            {children}
+          </FlowPayProvider>
+        </Web3Provider>
       </body>
     </html>
   );

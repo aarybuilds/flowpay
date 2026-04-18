@@ -12,7 +12,7 @@ import { Progress, Badge } from '@/components/ui';
 import { pickWinner } from '@/services/lotteryService';
 import type { LotteryWinner } from '@/types/lottery';
 
-function formatCountdown(drawTs: string) {
+function formatCountdown(drawTs: string | Date | number) {
   const diff = Math.max(0, new Date(drawTs).getTime() - Date.now());
   const h = Math.floor(diff / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
@@ -20,7 +20,7 @@ function formatCountdown(drawTs: string) {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-function formatTimeAgo(ts: string) {
+function formatTimeAgo(ts: string | Date | number) {
   const diff = Date.now() - new Date(ts).getTime();
   const h = Math.floor(diff / 3600000);
   if (h < 1) return 'just now';

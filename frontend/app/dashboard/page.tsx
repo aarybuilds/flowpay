@@ -278,7 +278,8 @@ export default function DashboardPage() {
                 {/* Right: Balance + Network */}
                 <div className="space-y-4">
                   <FlowPayBalanceCard />
-                  <Card style={cardStyle}>
+                    <Card>
+                  <div style={cardStyle} className="w-full h-full">
                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">Network</p>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
@@ -297,6 +298,7 @@ export default function DashboardPage() {
                         </Badge>
                       </div>
                     </div>
+                  </div>
                   </Card>
                 </div>
               </div>

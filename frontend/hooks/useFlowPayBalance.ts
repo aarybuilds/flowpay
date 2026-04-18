@@ -5,7 +5,8 @@ import { calculateSpendableBalance } from '@/lib/utils';
 import { mockNFTs } from '@/data/nfts';
 
 export function useFlowPayBalance() {
-  const { flowPayBalance, deposit, spend } = useFlowPay();
+  const { wallet, deposit, spend } = useFlowPay();
+  const flowPayBalance = wallet.balances.inr;
 
   const nftBackupLiquidity = mockNFTs.reduce((acc, n) => acc + n.backupLiquidity, 0);
   const { spendable, fromFlowPay, fromNFT } = calculateSpendableBalance(

@@ -1,27 +1,65 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { TokenBalance, WalletState, NFTAsset } from '@/types/wallet';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import { useAccount } from 'wagmi';
+import { NFTAsset } from '@/types/wallet';
 import { PaymentTransaction } from '@/types/payment';
 import { DepositTransaction } from '@/types/deposit';
-import { mockTokenBalances, mockTotalPortfolioINR } from '@/data/balances';
 import { mockNFTs } from '@/data/nfts';
 import { mockPaymentHistory } from '@/data/paymentHistory';
 import { mockDepositHistory } from '@/data/depositHistory';
-import { DEMO_WALLET_ADDRESS } from '@/constants';
 
-interface FlowPayContextType {
-  wallet: WalletState;
-  flowPayBalance: number;
-  isDemo: boolean;
+export type PriceSnapshot = {
+  USDC: number;
+  MATIC: number;
+  ETH: number;
+  [key: string]: number;
+};
+
+export type PaymentBreakdown = {
+  assetUsage: {
+    symbol: string;
+    amountToSell: number;
+    inrValue: number;
+  }[];
+  totalInr: number;
+};
+
+export interface FlowPayContextType {
+  mode: 'demo' | 'real';
+  wallet: {
+    address: string | null;
+    isConnected: boolean;
+    balances: {
+      usdc: number;
+      matic: number;
+      eth: number;
+      inr: number;
+      nfts: NFTAsset[];
+    };
+  };
+  prices: {
+    snapshot: PriceSnapshot | null;
+    lockedAt: number | null;
+  };
+  payment: {
+    amount: number;
+    breakdown: PaymentBreakdown | null;
+    loading: boolean;
+  };
+  
+  // Legacy / Common Data
   paymentHistory: PaymentTransaction[];
   depositHistory: DepositTransaction[];
-  connectWallet: (demo?: boolean) => Promise<void>;
-  disconnectWallet: () => void;
-  deposit: (amountINR: number, routes: DepositTransaction['routes']) => Promise<void>;
-  spend: (amountINR: number, merchantName: string, merchantLogo: string) => Promise<PaymentTransaction>;
-  addLotteryEntry: () => void;
   lotteryEntries: number;
+
+  // Actions
+  setPaymentState: (state: Partial<FlowPayContextType['payment']>) => void;
+  lockPrices: (snapshot: PriceSnapshot) => void;
+  setDemoMode: (enabled: boolean) => void;
+  deposit: (amountINR: number, routes: DepositTransaction['routes']) => Promise<void>;
+  spend: (amountINR: number, merchantName: string, merchantLogo: string, breakdown?: PaymentBreakdown) => Promise<PaymentTransaction>;
+  addLotteryEntry: () => void;
 }
 
 const FlowPayContext = createContext<FlowPayContextType | null>(null);
@@ -30,53 +68,62 @@ const STORAGE_KEY = 'flowpay_balance';
 const ENTRIES_KEY = 'flowpay_lottery_entries';
 
 export function FlowPayProvider({ children }: { children: React.ReactNode }) {
-  const [wallet, setWallet] = useState<WalletState>({
-    address: '',
-    isConnected: false,
-    totalPortfolioINR: 0,
-    tokens: [],
-    nfts: [],
-    network: 'Polygon Amoy',
-  });
-  const [flowPayBalance, setFlowPayBalance] = useState<number>(0);
-  const [isDemo, setIsDemo] = useState(false);
+  const account = useAccount(); // Wagmi
+  
+  const [isForcedDemo, setIsForcedDemo] = useState(false);
+  const mode = (account.isConnected && !isForcedDemo) ? 'real' : 'demo';
+  
+  // Base State
+  const [flowPayInrBalance, setFlowPayInrBalance] = useState(0);
+  const [lotteryEntries, setLotteryEntries] = useState(0);
+  const [prices, setPrices] = useState<{ snapshot: PriceSnapshot | null; lockedAt: number | null }>({ snapshot: null, lockedAt: null });
+  const [payment, setPayment] = useState<FlowPayContextType['payment']>({ amount: 0, breakdown: null, loading: false });
+
+  // History State
   const [paymentHistory, setPaymentHistory] = useState<PaymentTransaction[]>([]);
   const [depositHistory, setDepositHistory] = useState<DepositTransaction[]>([]);
-  const [lotteryEntries, setLotteryEntries] = useState(0);
 
+  // Load from local storage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) setFlowPayBalance(parseFloat(stored));
+    if (stored) setFlowPayInrBalance(parseFloat(stored));
     const entries = localStorage.getItem(ENTRIES_KEY);
     if (entries) setLotteryEntries(parseInt(entries));
+    
+    // Init demo history
+    if (paymentHistory.length === 0) setPaymentHistory(mockPaymentHistory);
+    if (depositHistory.length === 0) setDepositHistory(mockDepositHistory);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const connectWallet = useCallback(async (demo = false) => {
-    setIsDemo(demo);
-    setWallet({
-      address: DEMO_WALLET_ADDRESS,
-      isConnected: true,
-      totalPortfolioINR: mockTotalPortfolioINR,
-      tokens: mockTokenBalances,
+  // Compute Wallet
+  const wallet = useMemo(() => ({
+    address: mode === 'real' ? (account.address || null) : '0xDEm0...Flow',
+    isConnected: mode === 'real' ? true : isForcedDemo,
+    balances: {
+      // Still using mock balances until queried from onchain
+      usdc: 200,
+      matic: 150,
+      eth: 100,
+      inr: flowPayInrBalance,
       nfts: mockNFTs,
-      network: 'Polygon Amoy',
-    });
-    setPaymentHistory(mockPaymentHistory);
-    setDepositHistory(mockDepositHistory);
+    }
+  }), [mode, account.address, isForcedDemo, flowPayInrBalance]);
+
+  const lockPrices = useCallback((snapshot: PriceSnapshot) => {
+    setPrices({ snapshot, lockedAt: Date.now() });
   }, []);
 
-  const disconnectWallet = useCallback(() => {
-    setWallet({ address: '', isConnected: false, totalPortfolioINR: 0, tokens: [], nfts: [], network: 'Polygon Amoy' });
-    setFlowPayBalance(0);
-    setIsDemo(false);
-    localStorage.removeItem(STORAGE_KEY);
+  const setPaymentState = useCallback((state: Partial<FlowPayContextType['payment']>) => {
+    setPayment(prev => ({ ...prev, ...state }));
   }, []);
 
   const deposit = useCallback(async (amountINR: number, routes: DepositTransaction['routes']) => {
-    await new Promise(r => setTimeout(r, 1500)); // simulate TX
-    const newBalance = flowPayBalance + amountINR;
-    setFlowPayBalance(newBalance);
+    await new Promise(r => setTimeout(r, 1500));
+    const newBalance = flowPayInrBalance + amountINR;
+    setFlowPayInrBalance(newBalance);
     localStorage.setItem(STORAGE_KEY, String(newBalance));
+    
     const tx: DepositTransaction = {
       id: `dep_${Date.now()}`,
       totalINR: amountINR,
@@ -84,23 +131,27 @@ export function FlowPayProvider({ children }: { children: React.ReactNode }) {
       timestamp: new Date(),
       status: 'success',
       txHash: `0x${Math.random().toString(16).slice(2).padEnd(64, '0')}`,
-      flowPayBalanceBefore: flowPayBalance,
+      flowPayBalanceBefore: flowPayInrBalance,
       flowPayBalanceAfter: newBalance,
     };
     setDepositHistory(prev => [tx, ...prev]);
-  }, [flowPayBalance]);
+  }, [flowPayInrBalance]);
 
-  const spend = useCallback(async (amountINR: number, merchantName: string, merchantLogo: string): Promise<PaymentTransaction> => {
-    await new Promise(r => setTimeout(r, 1200)); // simulate TX
-    const newBalance = flowPayBalance - amountINR;
-    setFlowPayBalance(newBalance);
+  const spend = useCallback(async (amountINR: number, merchantName: string, merchantLogo: string, breakdown?: PaymentBreakdown): Promise<PaymentTransaction> => {
+    setPaymentState({ loading: true });
+    
+    // Simulating off-chain swap / indexer update logic execution time
+    await new Promise(r => setTimeout(r, 1000));
+    const newBalance = flowPayInrBalance - amountINR;
+    setFlowPayInrBalance(newBalance);
     localStorage.setItem(STORAGE_KEY, String(newBalance));
+    
     const tx: PaymentTransaction = {
       id: `pay_${Date.now()}`,
       merchantName,
       merchantLogo,
       amountINR,
-      flowPayBalanceBefore: flowPayBalance,
+      flowPayBalanceBefore: flowPayInrBalance,
       flowPayBalanceAfter: newBalance,
       timestamp: new Date(),
       status: 'success',
@@ -108,8 +159,10 @@ export function FlowPayProvider({ children }: { children: React.ReactNode }) {
       lotteryEntry: true,
     };
     setPaymentHistory(prev => [tx, ...prev]);
+    setPaymentState({ loading: false, amount: 0, breakdown: null });
+    
     return tx;
-  }, [flowPayBalance]);
+  }, [flowPayInrBalance, setPaymentState]);
 
   const addLotteryEntry = useCallback(() => {
     const next = lotteryEntries + 1;
@@ -117,8 +170,24 @@ export function FlowPayProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(ENTRIES_KEY, String(next));
   }, [lotteryEntries]);
 
+  const value = useMemo(() => ({
+    mode,
+    wallet,
+    prices,
+    payment,
+    paymentHistory,
+    depositHistory,
+    lotteryEntries,
+    setPaymentState,
+    lockPrices,
+    setDemoMode: setIsForcedDemo,
+    deposit,
+    spend,
+    addLotteryEntry,
+  }), [mode, wallet, prices, payment, paymentHistory, depositHistory, lotteryEntries, setPaymentState, lockPrices, deposit, spend, addLotteryEntry]);
+
   return (
-    <FlowPayContext.Provider value={{ wallet, flowPayBalance, isDemo, paymentHistory, depositHistory, connectWallet, disconnectWallet, deposit, spend, addLotteryEntry, lotteryEntries }}>
+    <FlowPayContext.Provider value={value}>
       {children}
     </FlowPayContext.Provider>
   );

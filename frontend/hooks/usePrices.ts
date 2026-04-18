@@ -1,24 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { TokenPrice, fetchTokenPrices } from '@/services/priceService';
+import { useState, useCallback } from 'react';
+import { useFlowPay, PriceSnapshot } from '@/lib/flowpayContext';
 
 export function usePrices() {
-  const [prices, setPrices] = useState<TokenPrice[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { lockPrices, prices } = useFlowPay();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    let mounted = true;
-    fetchTokenPrices()
-      .then(data => { if (mounted) { setPrices(data); setLoading(false); } })
-      .catch(err => { if (mounted) { setError(err.message); setLoading(false); } });
-    return () => { mounted = false; };
-  }, []);
+  // Take a real or mocked snapshot
+  const takeSnapshot = useCallback(async () => {
+    setLoading(true);
+    // Simulating API call to CoinGecko/Oracle
+    await new Promise(r => setTimeout(r, 600)); 
 
-  const getPrice = (symbol: string): number => {
-    return prices.find(p => p.symbol === symbol)?.inrPrice ?? 0;
+    const snapshot: PriceSnapshot = {
+      USDC: 83.5,
+      MATIC: 61.2,
+      ETH: 254000,
+    };
+
+    lockPrices(snapshot);
+    setLoading(false);
+    return snapshot;
+  }, [lockPrices]);
+
+  const timeSinceLock = prices.lockedAt ? Math.floor((Date.now() - prices.lockedAt) / 1000) : null;
+
+  return { 
+    snapshot: prices.snapshot, 
+    lockedAt: prices.lockedAt, 
+    timeSinceLock,
+    loading, 
+    takeSnapshot 
   };
-
-  return { prices, loading, error, getPrice };
 }
