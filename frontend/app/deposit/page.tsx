@@ -20,7 +20,8 @@ export default function DepositPage() {
   const router = useRouter();
   const { tokens, isConnected, tryDemo } = useWallet();
   const { breakdown, loading, computeRoutes } = usePaymentRouting();
-  const { deposit, flowPayBalance } = useFlowPay();
+  const { deposit, wallet } = useFlowPay();
+  const flowPayBalance = wallet.balances.inr;
 
   const [amount, setAmount] = useState('');
   const [confirming, setConfirming] = useState(false);
