@@ -1,0 +1,171 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockPriceOracle",
+  "sourceName": "contracts/MockPriceOracle.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "PriceUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "getPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "prices",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceInINR",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f80fd5b50338061003557604051631e4fbdf760e01b81525f600482015260240160405180910390fd5b61003e81610044565b50610093565b5f80546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6102d9806100a05f395ff3fe608060405234801561000f575f80fd5b506004361061005f575f3560e01c8062e4768b1461006357806341976e0914610078578063715018a6146100b35780638da5cb5b146100bb578063cfed246b146100d5578063f2fde38b146100f4575b5f80fd5b61007661007136600461025b565b610107565b005b6100a0610086366004610283565b6001600160a01b03165f9081526001602052604090205490565b6040519081526020015b60405180910390f35b610076610170565b5f546040516001600160a01b0390911681526020016100aa565b6100a06100e3366004610283565b60016020525f908152604090205481565b610076610102366004610283565b610183565b61010f6101c5565b6001600160a01b0382165f8181526001602052604090819020839055517fb556fac599c3c70efb9ab1fa725ecace6c81cc48d1455f886607def065f3e0c0906101649084904290918252602082015260400190565b60405180910390a25050565b6101786101c5565b6101815f6101f1565b565b61018b6101c5565b6001600160a01b0381166101b957604051631e4fbdf760e01b81525f60048201526024015b60405180910390fd5b6101c2816101f1565b50565b5f546001600160a01b031633146101815760405163118cdaa760e01b81523360048201526024016101b0565b5f80546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b0381168114610256575f80fd5b919050565b5f806040838503121561026c575f80fd5b61027583610240565b946020939093013593505050565b5f60208284031215610293575f80fd5b61029c82610240565b939250505056fea2646970667358221220f031da926dadf0f23769bf32406d327fa54c42dbf9bee565770b5ffab2b1746064736f6c63430008180033",
+  "deployedBytecode": "0x608060405234801561000f575f80fd5b506004361061005f575f3560e01c8062e4768b1461006357806341976e0914610078578063715018a6146100b35780638da5cb5b146100bb578063cfed246b146100d5578063f2fde38b146100f4575b5f80fd5b61007661007136600461025b565b610107565b005b6100a0610086366004610283565b6001600160a01b03165f9081526001602052604090205490565b6040519081526020015b60405180910390f35b610076610170565b5f546040516001600160a01b0390911681526020016100aa565b6100a06100e3366004610283565b60016020525f908152604090205481565b610076610102366004610283565b610183565b61010f6101c5565b6001600160a01b0382165f8181526001602052604090819020839055517fb556fac599c3c70efb9ab1fa725ecace6c81cc48d1455f886607def065f3e0c0906101649084904290918252602082015260400190565b60405180910390a25050565b6101786101c5565b6101815f6101f1565b565b61018b6101c5565b6001600160a01b0381166101b957604051631e4fbdf760e01b81525f60048201526024015b60405180910390fd5b6101c2816101f1565b50565b5f546001600160a01b031633146101815760405163118cdaa760e01b81523360048201526024016101b0565b5f80546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b0381168114610256575f80fd5b919050565b5f806040838503121561026c575f80fd5b61027583610240565b946020939093013593505050565b5f60208284031215610293575f80fd5b61029c82610240565b939250505056fea2646970667358221220f031da926dadf0f23769bf32406d327fa54c42dbf9bee565770b5ffab2b1746064736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
