@@ -7,7 +7,7 @@ import { useCreditLine } from '@/hooks/useCreditLine';
 import { LTV_RULES, INR_PER_USD } from '@/types/creditLine';
 import { ADDRESSES } from '@/src/contracts/addresses';
 import { parseUnits } from 'viem';
-import { useWriteContract, useAccount } from 'wagmi';
+import { useWriteContract, useAccount, usePublicClient } from 'wagmi';
 import mInrArtifact from '@/src/contracts/MockINR.json'; // ERC20 standard ABI
 import mockNftArtifact from '@/src/contracts/MockNFT.json';
 
@@ -19,6 +19,7 @@ export function OpenPositionModal({ isOpen, onClose }: OpenPositionModalProps) {
   const { openPositionERC20, openPositionNFT, currency, simulateBorrow } = useCreditLine();
   const { writeContractAsync } = useWriteContract();
   const { address } = useAccount();
+  const publicClient = usePublicClient();
 
   const [token, setToken] = useState<'MATIC' | 'USDC' | 'ETH' | 'NFT'>('MATIC');
   const [collateralAmount, setCollateralAmount] = useState('');
@@ -55,14 +56,15 @@ export function OpenPositionModal({ isOpen, onClose }: OpenPositionModalProps) {
       if (token === 'NFT') {
         const tokenId = BigInt(collateralAmount);
         
-        await writeContractAsync({
+        const hash = await writeContractAsync({
           address: ADDRESSES.MockNFT as `0x${string}`,
           abi: mockNftArtifact.abi,
           functionName: 'approve',
           args: [ADDRESSES.CollateralManager, tokenId],
         });
         
-        await new Promise(r => setTimeout(r, 6000));
+        if (publicClient) await publicClient.waitForTransactionReceipt({ hash });
+        else await new Promise(r => setTimeout(r, 8000));
         
         await openPositionNFT(ADDRESSES.MockNFT, tokenId, creditRaw);
       } else {
@@ -72,15 +74,15 @@ export function OpenPositionModal({ isOpen, onClose }: OpenPositionModalProps) {
         if (token === 'ETH') tokenAddress = ADDRESSES.MockETH;
 
         // 1. Approve Collateral Manager for ERC20 transfer
-        await writeContractAsync({
+        const hash = await writeContractAsync({
           address: tokenAddress as `0x${string}`,
           abi: mInrArtifact.abi, // reuse ERC20 generic abi
           functionName: 'approve',
           args: [ADDRESSES.CollateralManager, colRaw],
         });
 
-        // Simple delay to assume generic block processing before CDP execution in sequence demo
-        await new Promise(r => setTimeout(r, 6000));
+        if (publicClient) await publicClient.waitForTransactionReceipt({ hash });
+        else await new Promise(r => setTimeout(r, 8000));
 
         // 2. Open Position Atomic Action
         await openPositionERC20(tokenAddress, colRaw, creditRaw);
