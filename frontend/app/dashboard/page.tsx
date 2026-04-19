@@ -107,22 +107,22 @@ export default function DashboardPage() {
     riskLevel === 'safe'
       ? 'green'
       : riskLevel === 'moderate'
-      ? 'yellow'
-      : 'red';
+        ? 'yellow'
+        : 'red';
 
   const riskLabel =
     riskLevel === 'safe'
       ? '✓ Safe'
       : riskLevel === 'moderate'
-      ? '⚠ Moderate'
-      : '⚡ Dangerous';
+        ? '⚠ Moderate'
+        : '⚡ Dangerous';
 
   const hfColor =
     riskLevel === 'safe'
       ? MINT
       : riskLevel === 'moderate'
-      ? ORANGE
-      : '#FF5E5E';
+        ? ORANGE
+        : '#FF5E5E';
 
   return (
     <div

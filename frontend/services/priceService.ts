@@ -18,10 +18,35 @@ const MOCK_PRICES: TokenPrice[] = [
 ];
 
 export async function fetchTokenPrices(): Promise<TokenPrice[]> {
-  // TODO: Replace with CoinGecko API
-  // const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=usd-coin,matic-network,ethereum&vs_currencies=inr,usd&include_24hr_change=true')
-  await new Promise(r => setTimeout(r, 400)); // simulate network
-  return MOCK_PRICES;
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=usd-coin,matic-network,ethereum&vs_currencies=usd,inr&include_24hr_change=true');
+    if (!res.ok) throw new Error("HTTP error");
+    const data = await res.json();
+    
+    return [
+      {
+        symbol: 'USDC',
+        inrPrice: data['usd-coin']?.inr || 83.5,
+        usdPrice: data['usd-coin']?.usd || 1.0,
+        change24h: data['usd-coin']?.usd_24h_change || 0,
+      },
+      {
+        symbol: 'MATIC',
+        inrPrice: data['matic-network']?.inr || 68.2,
+        usdPrice: data['matic-network']?.usd || 0.81,
+        change24h: data['matic-network']?.usd_24h_change || 0,
+      },
+      {
+        symbol: 'ETH',
+        inrPrice: data['ethereum']?.inr || 250000,
+        usdPrice: data['ethereum']?.usd || 3000,
+        change24h: data['ethereum']?.usd_24h_change || 0,
+      }
+    ];
+  } catch (e) {
+    console.error("CoinGecko fetch failed:", e);
+    return MOCK_PRICES; 
+  }
 }
 
 export async function fetchTokenPrice(symbol: string): Promise<TokenPrice | null> {

@@ -7,6 +7,7 @@ import { ADDRESSES } from '@/src/contracts/addresses';
 import cmArtifact from '@/src/contracts/CollateralManager.json';
 import mInrArtifact from '@/src/contracts/MockINR.json';
 import oracleArtifact from '@/src/contracts/MockPriceOracle.json';
+import { fetchTokenPrices, TokenPrice } from '@/services/priceService';
 import { Position, BorrowSimulation, RiskLevel, CurrencyDisplay, INR_PER_USD, LTV_RULES, LIQUIDATION_THRESHOLD } from '@/types/creditLine';
 
 interface CreditTransaction {
@@ -108,26 +109,36 @@ export function CreditLineProvider({ children }: { children: React.ReactNode }) 
       }));
   }, [rawPositions]);
 
-  // Multicall Oracle Prices
-  const { data: maticPriceRaw } = useReadContract({
-    address: ADDRESSES.MockOracle as `0x${string}`,
-    abi: oracleArtifact.abi,
-    functionName: 'getPrice',
-    args: [ADDRESSES.MockMATIC],
-    query: { refetchInterval: 10000 }
-  });
+  // Live API Fetching
+  const [liveData, setLiveData] = useState<TokenPrice[] | null>(null);
+  const [sparkTick, setSparkTick] = useState(0);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadPrices() {
+      const p = await fetchTokenPrices();
+      if (mounted) setLiveData(p);
+    }
+    loadPrices();
+    const interval = setInterval(loadPrices, 15000); // 15 seconds real-time fetch
+    const sparkInterval = setInterval(() => setSparkTick(t => t + 1), 1000); // 1 second animation loop
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+      clearInterval(sparkInterval);
+    };
+  }, []);
 
   // Calculate generic derived states strictly from blockchain array
   const totalCollateralUSD = useMemo(() => {
     let sum = 0;
+    const maticPrice = liveData?.find(t => t.symbol === 'MATIC')?.usdPrice || 0.8;
     loans.filter(l => l.active && !l.isNFT).forEach(l => {
-      // Very basic price fallback simulation due to mock oracle limits
       const amt = Number(formatUnits(l.collateralAmount, 18));
-      const price = maticPriceRaw ? Number(formatUnits(maticPriceRaw as bigint, 8)) / INR_PER_USD : 0.8;
-      sum += amt * price;
+      sum += amt * maticPrice;
     });
     return sum;
-  }, [loans, maticPriceRaw]);
+  }, [loans, liveData]);
 
   const totalBorrowedUSD = useMemo(() => {
     let sum = 0;
@@ -146,11 +157,38 @@ export function CreditLineProvider({ children }: { children: React.ReactNode }) 
   const safeBorrowUSD = Math.min(availableCreditUSD, availableCreditUSD * 0.7);
   
   const collateralRatio = totalBorrowedUSD > 0 ? totalCollateralUSD / totalBorrowedUSD : 0;
-  const liquidationPrice = 1250; // Mock ETH price for UI fallback
-  const prices = useMemo(() => ({
-    eth: { priceUSD: 3100, change24h: 2.5, sparkline: [3000, 3050, 3100, 3080, 3150, 3100] },
-    usdc: { priceUSD: 1.0, change24h: 0.01, sparkline: [1, 1, 1, 1, 1, 1] }
-  }), []);
+  
+  const prices = useMemo(() => {
+    const ethTarget = liveData?.find(t => t.symbol === 'ETH');
+    const ethPriceUSD = ethTarget?.usdPrice || 3100;
+    const ethChange = ethTarget?.change24h || 1.8;
+
+    const usdcTarget = liveData?.find(t => t.symbol === 'USDC');
+    const usdcPriceUSD = usdcTarget?.usdPrice || 1.0;
+    const usdcChange = usdcTarget?.change24h || 0.01;
+
+    // Use sparkTick to create a rolling sine wave offset so the graph flows dynamically
+    const createSparkline = (base: number, volatility: number) => {
+      let line = [];
+      for(let i=0; i<6; i++) {
+        if (i === 5) {
+          line.push(base); // end exactly on the current live price
+        } else {
+          // Math wave that evolves per tick
+          const wave = Math.sin((sparkTick * 0.5) + i) * volatility;
+          line.push(base + (base * wave));
+        }
+      }
+      return line;
+    };
+
+    return {
+      eth: { priceUSD: ethPriceUSD, change24h: ethChange, sparkline: createSparkline(ethPriceUSD, 0.04) },
+      usdc: { priceUSD: usdcPriceUSD, change24h: usdcChange, sparkline: createSparkline(usdcPriceUSD, 0.001) }
+    };
+  }, [liveData, sparkTick]);
+
+  const liquidationPrice = prices.eth.priceUSD * 0.82; // UI estimation for chart scale
 
   const walletBalanceINR = mInrBalance ? Number(formatUnits(mInrBalance as bigint, 18)) : 0;
 
