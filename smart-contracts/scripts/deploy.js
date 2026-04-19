@@ -147,11 +147,8 @@ async function main() {
     MockNFT: mockNFTAddress,
     MockUSDC: mockUSDCAddress,
     MockMATIC: mockMATICAddress,
-<<<<<<< HEAD
     MockETH: mockETHAddress,
     // RewardLottery: lotteryAddress
-=======
-
   };
 
   const contractsDir = path.join(__dirname, "..", "..", "frontend", "src", "contracts");
