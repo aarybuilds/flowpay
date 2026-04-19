@@ -57,10 +57,10 @@ async function main() {
 
   // Default prices to update map
   const updates = [
-    { name: "USDC", address: ADDRESSES.MockUSDC, value: FALLBACK_PRICES.mockUSDC, cgId: 'usd-coin' },
-    { name: "MATIC", address: ADDRESSES.MockMATIC, value: FALLBACK_PRICES.mockMATIC, cgId: 'matic-network' },
-    { name: "ETH", address: ADDRESSES.MockETH, value: FALLBACK_PRICES.mockETH, cgId: 'ethereum' },
-    { name: "FPNFT", address: ADDRESSES.MockNFT, value: FALLBACK_PRICES.mockNFT, cgId: 'nft' }
+    // { name: "USDC", address: ADDRESSES.MockUSDC, value: FALLBACK_PRICES.mockUSDC, cgId: 'usd-coin' },
+    { name: "MATIC", address: ADDRESSES.MockMATIC, value: FALLBACK_PRICES.mockMATIC, cgId: 'matic-network' }
+    // { name: "ETH", address: ADDRESSES.MockETH, value: FALLBACK_PRICES.mockETH, cgId: 'ethereum' },
+    // { name: "FPNFT", address: ADDRESSES.MockNFT, value: FALLBACK_PRICES.mockNFT, cgId: 'nft' }
   ];
 
   // 2. Fetch Live Prices

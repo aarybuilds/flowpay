@@ -49,6 +49,8 @@ async function main() {
   }
 
   // 3. Deploy MockNFT
+  let mockNFTAddress = "";
+  /*
   let mockNFT, mockNFTAddress;
   if (EXISTING_NFT !== "") {
     mockNFTAddress = EXISTING_NFT;
@@ -62,6 +64,7 @@ async function main() {
     mockNFTAddress = await mockNFT.getAddress();
     console.log("MockNFT deployed to:", mockNFTAddress);
   }
+  */
 
   // 4. Deploy CollateralManager
   let cm, cmAddress;
@@ -81,6 +84,8 @@ async function main() {
   // 5. Deploy Mocks (USDC, MATIC, ETH)
   const MockERC20 = await hre.ethers.getContractFactory("MockERC20");
   
+  let mockUSDCAddress = "";
+  /*
   let mockUSDC, mockUSDCAddress;
   if (EXISTING_USDC !== "") {
     mockUSDCAddress = EXISTING_USDC;
@@ -92,6 +97,7 @@ async function main() {
     await mockUSDC.waitForDeployment();
     mockUSDCAddress = await mockUSDC.getAddress();
   }
+  */
 
   let mockMATIC, mockMATICAddress;
   if (EXISTING_MATIC !== "") {
@@ -105,6 +111,8 @@ async function main() {
     mockMATICAddress = await mockMATIC.getAddress();
   }
 
+  let mockETHAddress = "";
+  /*
   let mockETH, mockETHAddress;
   if (EXISTING_ETH !== "") {
     mockETHAddress = EXISTING_ETH;
@@ -116,13 +124,14 @@ async function main() {
     await mockETH.waitForDeployment();
     mockETHAddress = await mockETH.getAddress();
   }
+  */
 
   // 6. Set Oracle Prices
   console.log("Setting Oracle Prices...");
-  await (await oracle.setPrice(mockUSDCAddress, 8350000000)).wait(); // ₹83.50
+  // await (await oracle.setPrice(mockUSDCAddress, 8350000000)).wait(); // ₹83.50
   await (await oracle.setPrice(mockMATICAddress, 6820000000)).wait(); // ₹68.20
-  await (await oracle.setPrice(mockETHAddress, 24500000000000)).wait(); // ₹245,000
-  await (await oracle.setPrice(mockNFTAddress, 4500000000000)).wait(); // ₹45,000
+  // await (await oracle.setPrice(mockETHAddress, 24500000000000)).wait(); // ₹245,000
+  // await (await oracle.setPrice(mockNFTAddress, 4500000000000)).wait(); // ₹45,000
 
   // 7. Grant minter role to CM
   console.log("Granting MockINR minter role to CollateralManager...");
@@ -131,21 +140,21 @@ async function main() {
   // 8. Mint initial capital for testing
   console.log("Minting initial test tokens...");
   await (await mINR.mint(deployer.address, hre.ethers.parseEther("1000000"))).wait();
-  await (await mockUSDC.mint(deployer.address, hre.ethers.parseEther("10000"))).wait();
+  // await (await mockUSDC.mint(deployer.address, hre.ethers.parseEther("10000"))).wait();
   await (await mockMATIC.mint(deployer.address, hre.ethers.parseEther("5000"))).wait();
-  await (await mockETH.mint(deployer.address, hre.ethers.parseEther("10"))).wait();
-  await (await mockNFT.mint(deployer.address, 1)).wait();
-  await (await mockNFT.mint(deployer.address, 2)).wait();
+  // await (await mockETH.mint(deployer.address, hre.ethers.parseEther("10"))).wait();
+  // await (await mockNFT.mint(deployer.address, 1)).wait();
+  // await (await mockNFT.mint(deployer.address, 2)).wait();
 
   // Write addresses out to frontend
   const addresses = {
     CollateralManager: cmAddress,
     MockINR: mINRAddress,
     MockOracle: oracleAddress,
-    MockNFT: mockNFTAddress,
-    MockUSDC: mockUSDCAddress,
-    MockMATIC: mockMATICAddress,
-    MockETH: mockETHAddress
+    // MockNFT: mockNFTAddress,
+    // MockUSDC: mockUSDCAddress,
+    MockMATIC: mockMATICAddress
+    // MockETH: mockETHAddress
   };
 
   const contractsDir = path.join(__dirname, "..", "..", "frontend", "src", "contracts");
