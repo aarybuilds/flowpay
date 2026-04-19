@@ -39,7 +39,11 @@ export function Login() {
 
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.04)',
+<<<<<<< Updated upstream
     border: '1px solid rgba(124,110,255,0.18)',
+=======
+    border: '1px solid rgba(184,115,51,0.2)',
+>>>>>>> Stashed changes
     borderRadius: '0.875rem',
     color: 'white',
   };
@@ -55,11 +59,16 @@ export function Login() {
         transition={{ duration: 0.4, delay: 0.1 }}
         className="w-full max-w-sm relative z-10"
         style={{
+<<<<<<< Updated upstream
           background: 'rgba(22, 20, 42, 0.9)',
           border: '1px solid rgba(124,110,255,0.15)',
+=======
+          background: 'rgba(8,8,8,0.97)',
+          border: '1px solid rgba(184,115,51,0.2)',
+>>>>>>> Stashed changes
           borderRadius: '1.5rem',
           padding: '2rem',
-          boxShadow: '0 16px 60px rgba(0,0,0,0.6)',
+          boxShadow: '0 16px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(184,115,51,0.05)',
           backdropFilter: 'blur(24px)',
         }}
       >
@@ -85,8 +94,13 @@ export function Login() {
               autoComplete="email"
               className="w-full py-3 px-4 text-sm placeholder-slate-600 outline-none transition-all"
               style={inputStyle}
+<<<<<<< Updated upstream
               onFocus={e => { e.target.style.borderColor = 'rgba(124,110,255,0.5)'; }}
               onBlur={e  => { e.target.style.borderColor = 'rgba(124,110,255,0.18)'; }}
+=======
+              onFocus={e => { e.target.style.borderColor = 'rgba(184,115,51,0.55)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(184,115,51,0.2)'; }}
+>>>>>>> Stashed changes
             />
           </div>
 
@@ -97,9 +111,15 @@ export function Login() {
               <button
                 type="button"
                 className="text-xs transition-colors"
+<<<<<<< Updated upstream
                 style={{ color: '#A99BFF' }}
                 onMouseEnter={e => { (e.currentTarget).style.color = '#C4B5FD'; }}
                 onMouseLeave={e => { (e.currentTarget).style.color = '#A99BFF'; }}
+=======
+                style={{ color: '#B87333' }}
+                onMouseEnter={e => { (e.currentTarget).style.color = '#F0EBE3'; }}
+                onMouseLeave={e => { (e.currentTarget).style.color = '#B87333'; }}
+>>>>>>> Stashed changes
               >
                 Forgot password?
               </button>
@@ -114,8 +134,13 @@ export function Login() {
                 autoComplete="current-password"
                 className="w-full py-3 px-4 pr-11 text-sm placeholder-slate-600 outline-none transition-all"
                 style={inputStyle}
+<<<<<<< Updated upstream
                 onFocus={e => { e.target.style.borderColor = 'rgba(124,110,255,0.5)'; }}
                 onBlur={e  => { e.target.style.borderColor = 'rgba(124,110,255,0.18)'; }}
+=======
+                onFocus={e => { e.target.style.borderColor = 'rgba(184,115,51,0.55)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'rgba(184,115,51,0.2)'; }}
+>>>>>>> Stashed changes
               />
               <button
                 type="button"
@@ -140,12 +165,23 @@ export function Login() {
             disabled={!isValid || loading}
             className="w-full py-3.5 text-sm font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-1"
             style={{
+<<<<<<< Updated upstream
               background: 'linear-gradient(135deg, #A99BFF 0%, #7C6EFF 60%, #6B5CE7 100%)',
               borderRadius: '9999px',
               boxShadow: isValid ? '0 4px 20px rgba(124,110,255,0.4)' : 'none',
             }}
             onMouseEnter={e => { if (isValid && !loading) (e.currentTarget).style.boxShadow = '0 6px 28px rgba(124,110,255,0.6)'; }}
             onMouseLeave={e => { (e.currentTarget).style.boxShadow = isValid ? '0 4px 20px rgba(124,110,255,0.4)' : 'none'; }}
+=======
+              background: 'linear-gradient(135deg, #B87333 0%, #C25A2A 60%, #A0522D 100%)',
+              borderRadius: '9999px',
+              boxShadow: isValid ? '0 4px 20px rgba(184,115,51,0.45)' : 'none',
+              color: '#F0EBE3',
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+            onMouseEnter={e => { if (isValid && !loading) (e.currentTarget).style.boxShadow = '0 6px 28px rgba(184,115,51,0.65)'; }}
+            onMouseLeave={e => { (e.currentTarget).style.boxShadow = isValid ? '0 4px 20px rgba(184,115,51,0.45)' : 'none'; }}
+>>>>>>> Stashed changes
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -162,7 +198,11 @@ export function Login() {
         {/* Footer */}
         <p className="text-center text-xs text-slate-500 mt-5">
           New to FlowPay?{' '}
+<<<<<<< Updated upstream
           <Link href="/signup" className="font-medium transition-colors" style={{ color: '#A99BFF' }}>
+=======
+          <Link href="/signup" className="font-medium transition-colors" style={{ color: '#B87333' }}>
+>>>>>>> Stashed changes
             Create account
           </Link>
         </p>

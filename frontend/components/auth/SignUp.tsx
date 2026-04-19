@@ -77,7 +77,11 @@ export function SignUp() {
 
   const inputBase = {
     background: 'rgba(255,255,255,0.04)',
+<<<<<<< Updated upstream
     border: '1px solid rgba(124,110,255,0.18)',
+=======
+    border: '1px solid rgba(184,115,51,0.2)',
+>>>>>>> Stashed changes
     borderRadius: '0.875rem',
     color: 'white',
   };
@@ -89,7 +93,11 @@ export function SignUp() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
         className="w-full max-w-sm relative z-10"
+<<<<<<< Updated upstream
         style={{ background: 'rgba(22, 20, 42, 0.9)', border: '1px solid rgba(124,110,255,0.15)', borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 16px 60px rgba(0,0,0,0.6)', backdropFilter: 'blur(24px)' }}
+=======
+        style={{ background: 'rgba(8,8,8,0.97)', border: '1px solid rgba(184,115,51,0.2)', borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 16px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(184,115,51,0.05)', backdropFilter: 'blur(24px)' }}
+>>>>>>> Stashed changes
       >
         <AnimatePresence mode="wait">
           {success ? (
@@ -102,9 +110,9 @@ export function SignUp() {
             >
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: 'linear-gradient(135deg, rgba(52,211,153,0.2), rgba(16,185,129,0.1))', border: '2px solid rgba(52,211,153,0.4)' }}
+                style={{ background: 'linear-gradient(135deg, rgba(184,115,51,0.2), rgba(194,90,42,0.1))', border: '2px solid rgba(184,115,51,0.4)' }}
               >
-                <CheckCircle2 className="w-10 h-10" style={{ color: '#34d399' }} />
+                <CheckCircle2 className="w-10 h-10" style={{ color: '#B87333' }} />
               </div>
               <h2 className="text-2xl font-black text-white mb-2">Account Created!</h2>
               <p className="text-sm text-slate-400">Taking you to your dashboard…</p>
@@ -112,7 +120,11 @@ export function SignUp() {
                 <div className="w-8 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                   <motion.div
                     className="h-full rounded-full"
+<<<<<<< Updated upstream
                     style={{ background: 'linear-gradient(90deg, #A99BFF, #6B5CE7)' }}
+=======
+                    style={{ background: 'linear-gradient(90deg, #B87333, #C25A2A)' }}
+>>>>>>> Stashed changes
                     initial={{ width: '0%' }}
                     animate={{ width: '100%' }}
                     transition={{ duration: 1.4, ease: 'linear' }}
@@ -143,8 +155,13 @@ export function SignUp() {
                     placeholder="you@example.com"
                     className="w-full py-3 px-4 text-sm placeholder-slate-600 outline-none transition-all"
                     style={inputBase}
+<<<<<<< Updated upstream
                     onFocus={(e) => { e.target.style.borderColor = 'rgba(124,110,255,0.5)'; }}
                     onBlur={(e) => { e.target.style.borderColor = 'rgba(124,110,255,0.18)'; }}
+=======
+                    onFocus={(e) => { e.target.style.borderColor = 'rgba(184,115,51,0.55)'; }}
+                    onBlur={(e) => { e.target.style.borderColor = 'rgba(184,115,51,0.2)'; }}
+>>>>>>> Stashed changes
                   />
                 </div>
 
@@ -160,8 +177,13 @@ export function SignUp() {
                       placeholder="Create a password"
                       className="w-full py-3 px-4 pr-11 text-sm placeholder-slate-600 outline-none transition-all"
                       style={inputBase}
+<<<<<<< Updated upstream
                       onFocus={(e) => { e.target.style.borderColor = 'rgba(124,110,255,0.5)'; }}
                       onBlur={(e) => { e.target.style.borderColor = 'rgba(124,110,255,0.18)'; }}
+=======
+                      onFocus={(e) => { e.target.style.borderColor = 'rgba(184,115,51,0.55)'; }}
+                      onBlur={(e) => { e.target.style.borderColor = 'rgba(184,115,51,0.2)'; }}
+>>>>>>> Stashed changes
                     />
                     <button
                       type="button"
@@ -188,6 +210,7 @@ export function SignUp() {
                       style={{
                         ...inputBase,
                         borderColor: form.confirm
+<<<<<<< Updated upstream
                           ? (passwordsMatch ? 'rgba(52,211,153,0.4)' : 'rgba(239,68,68,0.4)')
                           : 'rgba(124,110,255,0.18)',
                       }}
@@ -196,6 +219,16 @@ export function SignUp() {
                         e.target.style.borderColor = form.confirm
                           ? (passwordsMatch ? 'rgba(52,211,153,0.4)' : 'rgba(239,68,68,0.4)')
                           : 'rgba(124,110,255,0.18)';
+=======
+                          ? (passwordsMatch ? 'rgba(0,212,170,0.4)' : 'rgba(239,68,68,0.4)')
+                          : 'rgba(184,115,51,0.2)',
+                      }}
+                      onFocus={(e) => { e.target.style.borderColor = 'rgba(184,115,51,0.55)'; }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = form.confirm
+                          ? (passwordsMatch ? 'rgba(0,212,170,0.4)' : 'rgba(239,68,68,0.4)')
+                          : 'rgba(184,115,51,0.2)';
+>>>>>>> Stashed changes
                       }}
                     />
                     <button
@@ -224,10 +257,19 @@ export function SignUp() {
                 className="w-full py-3.5 text-sm font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-5"
                 style={{
                   background: isValid
+<<<<<<< Updated upstream
                     ? 'linear-gradient(135deg, #A99BFF 0%, #7C6EFF 60%, #6B5CE7 100%)'
                     : 'rgba(124,110,255,0.3)',
                   borderRadius: '9999px',
                   boxShadow: isValid ? '0 4px 20px rgba(124,110,255,0.4)' : 'none',
+=======
+                    ? 'linear-gradient(135deg, #B87333 0%, #C25A2A 60%, #A0522D 100%)'
+                    : 'rgba(184,115,51,0.2)',
+                  borderRadius: '9999px',
+                  boxShadow: isValid ? '0 4px 20px rgba(184,115,51,0.45)' : 'none',
+                  color: '#F0EBE3',
+                  fontFamily: "'Space Grotesk', sans-serif",
+>>>>>>> Stashed changes
                 }}
               >
                 {loading ? (
@@ -243,7 +285,7 @@ export function SignUp() {
 
               <p className="text-center text-xs text-slate-500">
                 Already have an account?{' '}
-                <Link href="/connect" className="text-slate-300 hover:text-white transition-colors font-medium">
+                <Link href="/connect" className="transition-colors font-medium" style={{ color: '#B87333' }}>
                   Sign in
                 </Link>
               </p>

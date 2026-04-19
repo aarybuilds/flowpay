@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { Progress, Badge } from '@/components/ui';
 import { pickWinner } from '@/services/lotteryService';
 import type { LotteryWinner } from '@/types/lottery';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 function formatCountdown(drawTs: string | Date | number) {
   const diff = Math.max(0, new Date(drawTs).getTime() - Date.now());
@@ -65,9 +66,15 @@ export default function LotteryPage() {
   };
 
   return (
+<<<<<<< Updated upstream
     <div className="flex flex-col min-h-screen" style={{ background: '#0D0D14' }}>
       <Navbar />
 
+=======
+    <AuthGuard>
+      <div className="flex flex-col min-h-screen" style={{ background: '#0D0D14' }}>
+      
+>>>>>>> Stashed changes
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 lg:px-8 pt-24 pb-8">
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
 
@@ -272,6 +279,7 @@ export default function LotteryPage() {
           <p className="text-xs text-slate-600">© 2024 FlowPay Protocol. Liquid assets, unified.</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </AuthGuard>
   );
 }
