@@ -33,6 +33,48 @@ Instead of liquidating crypto assets to cover daily expenses or business operati
 
 ---
 
+## 🧮 Core Algorithms & Math
+
+FlowPay leverages mathematically rigorous models securely locked on-chain (e.g., within `CollateralManager.sol`) and simulated in real-time on your dashboard:
+
+1. **Total Collateral (USD):**
+   Calculated by summing the total deposited balance multiplied by the live oracle spot price.
+   ```text
+   Total Collateral USD = Σ (Token Amount * Live Oracle Spot Price)
+   ```
+2. **Total Borrowed (USD):**
+   Calculated by converting fiat debt (e.g., INR) into USD representations.
+   ```text
+   Total Borrowed USD = Total INR Debt / INR_PER_USD (83.5)
+   ```
+3. **Health Factor (HF) Algorithm:**
+   The definitive dynamic safety safety score. An `HF < 1.0` triggers liquidation.
+   ```text
+   Health Factor = (Total Collateral USD * LIQUIDATION_THRESHOLD) / Total Borrowed USD
+   ```
+   *Note: The **Liquidation Threshold** (e.g., 0.85 or 85%) dictates the maximum percentage of collateral value recognized.*
+   The UI categorizes this automatically: **Safe** (`HF > 2.0`, Green), **Moderate** (`HF >= 1.2`, Yellow), and **Dangerous** (`HF < 1.2`, Red).
+4. **Loan-To-Value (LTV) Bounds:**
+   LTV dictates the maximum permitted borrow limit for a new position. To create a safety buffer, the initial LTV (e.g., 70%) is structurally lower than the Liquidation Threshold (85%).
+   ```text
+   Maximum Borrowable USD = Total Collateral USD * LTV_RULES.ERC20
+   ```
+
+---
+
+## 💰 Protocol Economics & Profitability
+
+FlowPay is designed as a fundamentally self-sustaining and profitable decentralized entity:
+
+1. **Liquidation Arbitrage & Spread:**
+   When a position becomes underwater (`HF < 1.0`), automated third-party bots call `liquidatePosition()` to physically pay off the debt. In exchange, the smart contract rewards them with the user's locked crypto **plus a liquidation penalty/bonus** (e.g., 5%). The protocol remains fully funded and solvent, the bots turn an arbitrage profit, and the protocol treasury can capture a fractional margin of the penalty.
+2. **Origination & Borrowing Fees:**
+   FlowPay profits by applying marginal algorithmic fees when users mint stable tokens or establish new decentralized credit lines.
+3. **Interest Rate Spread (Future Phase):**
+   As the protocol expands, variable interest algorithms will govern the asset pools. The fractional spread between what borrowers pay and what suppliers earn flows continuously into the protocol treasury as recurring revenue.
+
+---
+
 ## 🏗 Architecture & Platform Modules
 
 FlowPay employs a modern architecture, splitting responsibilities cleanly between the frontend, smart contracts, and off-chain indexing databases.
