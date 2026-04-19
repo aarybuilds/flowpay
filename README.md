@@ -1,6 +1,6 @@
 # FlowPay
 
-Welcome to **FlowPay**, a comprehensive Web3 decentralized finance (DeFi) payment and lending platform. FlowPay is designed to seamlessly bridge the gap between traditional transaction settlements and decentralized liquidity, empowering users to leverage their cryptocurrency assets to unlock working capital without selling their holdings.
+Welcome to **FlowPay**, a decentralized finance (DeFi) on-chain borrowing and collateralization protocol. FlowPay empowers users to leverage their cryptocurrency assets to unlock working capital by minting or borrowing stablecoins, all without needing to sell their underlying holdings.
 
 ## 📖 Table of Contents
 - [About the Project](#about-the-project)
@@ -9,19 +9,13 @@ Welcome to **FlowPay**, a comprehensive Web3 decentralized finance (DeFi) paymen
 - [User Workflows](#user-workflows)
 - [Technology Stack](#technology-stack)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Smart Contracts Deployment](#smart-contracts-deployment)
-  - [Backend Services](#backend-services)
-  - [Frontend Application](#frontend-application)
-  - [Database Initialization](#database-initialization)
 - [Project Configuration](#project-configuration)
-- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## 📌 About the Project
 
-In the rapidly evolving world of decentralized finance, liquidity and capital efficiency are paramount. FlowPay is built to not only act as a seamless cryptocurrency payment gateway for merchants and users, but to also serve as a robust **on-chain borrowing and collateralization protocol**.
+In the rapidly evolving world of decentralized finance, liquidity and capital efficiency are paramount. FlowPay is built to serve exclusively as a robust **on-chain borrowing and collateralization protocol**.
 
 Instead of liquidating crypto assets to cover daily expenses or business operations, users can lock their assets (like ETH or MATIC) into our decentralized smart contract vaults and instantly mint or borrow stablecoins (like USDC). FlowPay continually monitors the health factor of these loans, safeguarding the protocol while giving users full transparency over their Loan-to-Value (LTV) ratios.
 
@@ -29,35 +23,28 @@ Instead of liquidating crypto assets to cover daily expenses or business operati
 
 ### 🏦 Decentralized Borrowing & Lending Vaults
 - **Over-collateralized Loans:** Users can deposit volatile crypto assets safely into audited smart contracts and draw down stable liquidity.
-- **Dynamic Interest Rates:** (Planned) Interest rates algorithmically adjust based on pool utilization and market dynamics.
+- **Dynamic Interest Rates:** Interest rates algorithmically adjust based on pool utilization and market dynamics.
 - **Real-Time Health Monitoring:** Keep a constant eye on loan health factors and collateral ratios directly from the unified dashboard, helping you avoid auto-liquidations.
-
-### 💳 Seamless Crypto Payments
-- **Multi-Asset Support:** Native support for transacting in USDC, MATIC, ETH, and other major tokens.
-- **Merchant Gateway:** Provides simulated and on-chain payment rails for merchants looking to accept web3 payments effortlessly.
 
 ### 📊 Comprehensive User Dashboard
 - **Web3 Integrations:** Effortless wallet connectivity using Wagmi and RainbowKit.
 - **In-Depth Analytics:** Visual representations of your collateral balances, borrowing history, and liquidation thresholds using Recharts.
-- **Hybrid Data Model:** Seamlessly blends on-chain data (Wagmi/Viem) with off-chain indexing (Supabase/Firebase) for a lightning-fast User Experience.
+- **Persistent Data:** Uses Supabase for storing necessary off-chain context and ensuring a snappy user experience.
 
 ---
 
 ## 🏗 Architecture & Platform Modules
 
-FlowPay employs a modern hybrid architecture, splitting responsibilities cleanly between the frontend, backend, smart contracts, and off-chain databases.
+FlowPay employs a modern architecture, splitting responsibilities cleanly between the frontend, smart contracts, and off-chain indexing databases.
 
 1. **Frontend App (`/frontend`)**
    The presentation layer built on React 19 and Next.js. It manages the decentralized wallet connections and reads/writes to the blockchain via Viem. It features aggressive caching, clean UI/UX using Tailwind CSS v4, and dynamic animations with Framer Motion.
-   
-2. **Backend Services (`/backend`)**
-   An Express.js REST API that serves as an indexing bridge and relayer. It fetches real-time crypto aggregates, abstracts away complex logic, handles off-chain verification (mock payment settlements), and queries collateral health from the blockchain.
 
-3. **Smart Contracts (`/smart-contracts`)**
+2. **Smart Contracts (`/smart-contracts`)**
    The heart of the borrowing protocol. Written in Solidity and managed via Hardhat, these contracts handle collateral custody, LTV mathematical logic, price oracle integrations via Chainlink (for asset valuation), and liquidator interactions.
 
-4. **Off-Chain State (`Supabase / Firebase`)**
-   Used to persist contextual user data that doesn't strictly need to be on-chain (e.g., user profiles, UI preferences, and transactional histories for faster loading).
+3. **Off-Chain State (`Supabase`)**
+   Used to persist contextual user data that doesn't strictly need to be on-chain, accelerating the loading times for the dashboard.
 
 ---
 
@@ -84,19 +71,14 @@ FlowPay employs a modern hybrid architecture, splitting responsibilities cleanly
 - **Web3 Layer:** Wagmi, Viem, @rainbow-me/rainbowkit
 - **Charts/Visualization:** Recharts
 
-### Backend API
-- **Framework:** Node.js, Express.js
-- **Web3 Interface:** Ethers.js (v6)
-
 ### Smart Contract Infrastructure
 - **Development Environment:** Hardhat
 - **Language:** Solidity
 - **Libraries:** OpenZeppelin Contracts
-- **Oracles:** (Future) Chainlink Price Feeds
+- **Oracles:** Chainlink Price Feeds
 
-### Databases & Auth
+### Databases
 - **Relational DB:** Supabase (PostgreSQL)
-- **NoSQL / Auth:** Firebase
 
 ---
 
@@ -112,7 +94,7 @@ You must have the following installed:
 - A Web3 extension wallet (e.g., MetaMask).
 
 ### Smart Contracts Deployment
-To deploy the internal vaults and payment routers locally:
+To deploy the internal vaults locally:
 ```bash
 cd smart-contracts
 npm install
@@ -126,15 +108,6 @@ npx hardhat node
 # In a separate terminal, deploy the scripts:
 npm run deploy:local
 ```
-
-### Backend Services
-To spin up the Express API:
-```bash
-cd backend
-npm install
-npm start
-```
-*The API should now be running on `http://localhost:4000`.*
 
 ### Frontend Application
 To start the Next.js development server:
@@ -154,19 +127,11 @@ If you are syncing with Supabase:
 ---
 
 ## ⚙️ Project Configuration
-Duplicate the provided `.env.example` to `.env` in the root (or within the respective `/frontend` and `/backend` directories) based on your build setup. Ensure you populate the required values!
+Duplicate the provided `.env.example` to `.env` in the root (or within the respective `/frontend` directory) based on your build setup. Ensure you populate the required values!
 - `NEXT_PUBLIC_ALCHEMY_API_KEY`: RPC endpoint key for blockchain reads.
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`: Necessary for RainbowKit.
 - `PRIVATE_KEY`: For deploying smart contracts locally or on testnets.
-- **Database Endpoints**: Ensure your Firebase and Supabase keys match your managed projects.
-
----
-
-## 🛤 Roadmap
-- **Phase 1 (Current):** Basic decentralized vault collateralization, USDC borrowing structures, and simulated merchant payments.
-- **Phase 2:** Integrate live Chainlink price feeds to natively process real-time liquidation thresholds. Migrate to testnets (e.g., Sepolia or Polygon Amoy).
-- **Phase 3:** Introduce algorithmic dynamic interest rates and native token staking. Open the platform to allow third-party liquidators.
-- **Phase 4:** Mainnet deployment, full institutional gateway APIs, and transition towards decentralized governance.
+- **Supabase URLs**: Ensure your Supabase keys match your managed projects.
 
 ---
 
