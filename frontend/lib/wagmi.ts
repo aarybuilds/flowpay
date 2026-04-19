@@ -8,5 +8,5 @@ export const config = getDefaultConfig({
   appName: 'FlowPay',
   projectId,
   chains: [sepolia, mainnet],
-  ssr: false, // Turned off to prevent Hydration SSR deadlocks without cookieStorage
+  ssr: true, // IMPORTANT: Must be true in Next.js 13/14 App Router to prevent WalletConnect SSR indexedDB errors
 });
